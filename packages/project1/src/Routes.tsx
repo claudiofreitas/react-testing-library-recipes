@@ -10,7 +10,7 @@ const Routes: FC = () => {
       </Route>
       <Redirect to="/" />
     </Switch>
-  )
-}
+  );
+};
 
 export default Routes;
