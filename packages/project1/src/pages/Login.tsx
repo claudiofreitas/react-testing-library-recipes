@@ -1,6 +1,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Form, Input } from 'antd';
 import 'antd/dist/antd.css';
+import './Login.scss';
 
 interface FormData {
   username: string;
@@ -37,12 +38,17 @@ const useLogin = () => {
     });
   }, [formData]);
 
-  const isSubmitDisabled = useMemo(() => {
-    return !(formData.username && formData.username.length > 0);
-  }, [formData.username]);
+  const isSubmitEnabled = useMemo(() => {
+    const isUsernameEmpty =
+      !formData.username || formData.username.length === 0;
+    const isPasswordEmpty =
+      !formData.password || formData.password.length === 0;
+
+    return !isUsernameEmpty && !isPasswordEmpty;
+  }, [formData.username, formData.password]);
 
   return {
-    isSubmitDisabled,
+    isSubmitDisabled: !isSubmitEnabled,
     formData,
     setFormData,
     formErrors,
@@ -60,6 +66,7 @@ const Login: FC = () => {
         width: 500,
         margin: '100px auto',
       }}
+      className="login-page"
     >
       <h1>Welcome to Login</h1>
       <p>
@@ -88,10 +95,11 @@ const Login: FC = () => {
 
         <Form.Item
           label={'Password'}
-          validateStatus={Boolean(formErrors.password) ? 'error' : undefined}
+          validateStatus={Boolean(formErrors.password) ? 'error' : 'success'}
           help={formErrors.password}
         >
           <Input
+            name={'Password'}
             placeholder={'Enter your password'}
             value={formData.password}
             onChange={(e) => {
